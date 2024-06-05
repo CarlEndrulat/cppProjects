@@ -1,6 +1,7 @@
 #pragma once
 
 #include "triangle.h"
+#include <iostream>
 
 class square {
 public:
@@ -19,24 +20,7 @@ public:
 
 	~square() {};
 
-	bool isSquare() {
-		triangle tri0 = triangle(*points[0], *points[1], *points[2]);
-		if (!tri0.isRightTriangle()) {
-			return false;
-		}
-
-		triangle tri1 = triangle(*points[0], *points[2], *points[3]);
-		if (!tri1.isRightTriangle()) {
-			return false;
-		}
-
-		triangle tri2 = triangle(*points[0], *points[1], *points[3]);
-		if (!tri2.isRightTriangle()) {
-			return false;
-		}
-
-		return true;
-	}
+	bool isSquare();
 
 private:
 	std::vector<point*> points;

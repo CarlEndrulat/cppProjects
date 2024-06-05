@@ -1,6 +1,5 @@
 #pragma once
 
-#include <iostream>
 #include <cmath>
 #include "point.h"
 using namespace std;
@@ -34,12 +33,8 @@ public:
 	~line() {};
 
 	double lineLength() {
-		return this->x - this->y;
+		return x - y;
 	};
-
-	bool sharePoint(line a) {
-		return (x == a.x || y == a.y || y == a.x || x == a.y) ? true : false;
-	}
 
 private:
 	point x;

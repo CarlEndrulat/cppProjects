@@ -1,19 +1,30 @@
-//confirm the points passed form a right triangle. 
-
-//90 degree angle and length of lines is proper.
-
 #include "triangle.h"
 
-/*
-void main() {
+bool triangle::isTriangle() {
+	if (points[0] != points[1] && points[0] != points[2] && points[1] != points[2]) {
+		return true;
+	}
 
-	point a = point(0, 0);
-	point b = point(0, 5);
-	point c = point(5, 0);
+	return false;
+};
 
-	triangle tri = triangle(a, b, c);
+bool triangle::isRightTriangle() {
 
-	cout << tri.isRightTriangle() << "\n";
+	if (isTriangle()) {
+		double ll0 = lines[0]->lineLength();
+		double ll1 = lines[1]->lineLength();
+		double ll2 = lines[2]->lineLength();
 
-	cout << "end of main\n";
-}*/
+		if (ll0 == ll1) {
+			return (ll2 == sqrt(ll1 * ll1 + ll0 * ll0)) ? true : false;
+		}
+		else if (ll0 == ll2) {
+			return (ll1 == sqrt(ll2 * ll2 + ll0 * ll0)) ? true : false;
+		}
+		else if (ll1 == ll2) {
+			return (ll0 == sqrt(ll1 * ll1 + ll2 * ll2)) ? true : false;
+		}
+	}
+
+	return false;
+};
