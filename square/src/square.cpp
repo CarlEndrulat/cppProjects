@@ -1,4 +1,10 @@
 #include "square.h"
+#include <chrono>
+
+using std::chrono::steady_clock;
+using std::chrono::duration;
+
+using namespace std::chrono_literals;
 
 bool square::isSquare() {
 	triangle tri0 = triangle(std::vector<point*>{points[0], points[1], points[2]});
@@ -29,22 +35,50 @@ void square::printSquare() {
 
 void main() {
 
-	// TODO create large scale tester
+	// TODO improve large scale tester
 
 	// TODO use std::move in constructors
 
 	// TODO implement concurrency
 
+	double testLimit = 100000;
+	double testSuccess = 0;
 
-	point a = point(0, 0);
-	point b = point(0, 5);
-	point c = point(5, 0);
-	point d = point(5, 5);
-	std::vector<point*> points = { &a, &b, &c, &d };
+	point a1 = point(0, 0);
+	point b1 = point(0, 5);
+	point c1 = point(5, 0);
+	point d1 = point(5, 5);
 
-	square sq = square(points);
+	point a2 = point(-2, -2);
+	point b2 = point(-2, 8);
+	point c2 = point(8, -2);
+	point d2 = point(8, 8);
 
-	cout << sq.isSquare() << "\n";
+	point a3 = point(1, 0);
+	point b3 = point(0, 5);
+	point c3 = point(5, 0);
+	point d3 = point(5, 5);
+
+	std::vector<point*> points1 = { &a1, &b1, &c1, &d1 };
+	std::vector<point*> points2 = { &a2, &b2, &c2, &d2 };
+	std::vector<point*> points3 = { &a3, &b3, &c3, &d3 };
+
+	auto t1 = steady_clock::now();
+
+	for (int i = 0; i < testLimit; i++) {
+		square sq1 = square(points1);
+		square sq2 = square(points2);
+		square sq3 = square(points3);
+
+		if (sq1.isSquare() && sq2.isSquare() && !sq3.isSquare()) {
+			testSuccess++;
+		}
+	}
+
+	duration<double> dur1 = steady_clock::now() - t1;
+
+	cout << "Successful test percentage = " << testSuccess/testLimit*100 << "percent\n";
+	cout << "output took " << dur1 << "seconds\n";
 
 	cout << "end of main\n";
 }
