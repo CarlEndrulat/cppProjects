@@ -1,6 +1,8 @@
 #pragma once
 
 #include <cmath>
+#include <utility>
+#include <iostream>
 
 class point {
 public:
@@ -14,7 +16,7 @@ public:
 		y = 0;
 	};
 
-	point(point& p) {
+	point(const point& p) {
 		x = p.x; 
 		y = p.y;
 	};
@@ -25,7 +27,7 @@ public:
 		double l1 = abs(x - rhs.x);
 		double l2 = abs(y - rhs.y);
 
-		return sqrt(l1 * l1 + l2 * l2);
+		return sqrt((l1 * l1) + (l2 * l2));
 	};
 	
 	bool operator==(point rhs) {
@@ -36,6 +38,14 @@ public:
 		x = rhs.x;
 		y = rhs.y;
 		return *this;
+	};
+
+	double getx() {
+		return x;
+	};
+
+	double gety() {
+		return y;
 	};
 
 private:

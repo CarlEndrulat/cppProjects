@@ -13,14 +13,16 @@ public:
 		}
 	}
 
-	square(auto vec)
+	square(std::vector<point*> vec)
 	{
-		points = vec;
+		points = std::move(vec);
 	};
 
 	~square() {};
 
 	bool isSquare();
+
+	void printSquare();
 
 private:
 	std::vector<point*> points;

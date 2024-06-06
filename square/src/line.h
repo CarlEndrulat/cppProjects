@@ -19,7 +19,7 @@ public:
 		y = b;
 	};
 
-	line(line& l) {
+	line(const line& l) {
 		x = l.x;
 		y = l.y;
 	};
@@ -33,6 +33,7 @@ public:
 	~line() {};
 
 	double lineLength() {
+		//cout << "arbitrary line length = " << x - y << "\n";
 		return x - y;
 	};
 
