@@ -37,7 +37,7 @@ void main() {
 
 	// TODO improve large scale tester
 
-	// TODO use std::move in constructors
+	// TODO use smart pointers (especially for lines)
 
 	// TODO implement concurrency
 
@@ -48,16 +48,19 @@ void main() {
 	point b1 = point(0, 5);
 	point c1 = point(5, 0);
 	point d1 = point(5, 5);
+	bool success1 = true;
 
 	point a2 = point(-2, -2);
 	point b2 = point(-2, 8);
 	point c2 = point(8, -2);
 	point d2 = point(8, 8);
+	bool success2 = true;
 
 	point a3 = point(1, 0);
 	point b3 = point(0, 5);
 	point c3 = point(5, 0);
 	point d3 = point(5, 5);
+	bool success3 = false;
 
 	std::vector<point*> points1 = { &a1, &b1, &c1, &d1 };
 	std::vector<point*> points2 = { &a2, &b2, &c2, &d2 };
@@ -70,14 +73,14 @@ void main() {
 		square sq2 = square(points2);
 		square sq3 = square(points3);
 
-		if (sq1.isSquare() && sq2.isSquare() && !sq3.isSquare()) {
+		if ((sq1.getValidSquare() == success1) && (sq2.getValidSquare() == success2) && (sq3.getValidSquare() == success3)) {
 			testSuccess++;
 		}
 	}
 
 	duration<double> dur1 = steady_clock::now() - t1;
 
-	cout << "Successful test percentage = " << testSuccess/testLimit*100 << "percent\n";
+	cout << "Successful test percentage = " << testSuccess/testLimit*100 << " percent\n";
 	cout << "output took " << dur1 << "seconds\n";
 
 	cout << "end of main\n";
