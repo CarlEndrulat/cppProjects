@@ -3,6 +3,8 @@
 #include <cmath>
 #include <utility>
 #include <iostream>
+#include <string>
+#include <sstream>
 
 class point {
 public:
@@ -47,6 +49,12 @@ public:
 	double gety() {
 		return y;
 	};
+
+	std::string pointString() {
+		std::stringstream ss;
+		ss << x << ", " << y;
+		return ss.str();
+	}
 
 private:
 	double x;

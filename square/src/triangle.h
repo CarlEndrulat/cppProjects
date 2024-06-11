@@ -7,6 +7,7 @@ class triangle{
 public:
 	triangle(std::vector<point*> pointsVector)
 	{
+
 		points = pointsVector;
 
 		line lineA = line(*pointsVector[0], *pointsVector[1]);
@@ -16,6 +17,7 @@ public:
 		lines.push_back(lineA);
 		lines.push_back(lineB);
 		lines.push_back(lineC);
+
 	};
 
 	triangle() {

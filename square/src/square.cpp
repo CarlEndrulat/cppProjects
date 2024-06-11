@@ -1,10 +1,19 @@
 #include "square.h"
 #include <chrono>
+#include <thread>
+#include <functional>
+#include <unordered_map>
 
 using std::chrono::steady_clock;
 using std::chrono::duration;
 
 using namespace std::chrono_literals;
+
+void testSquare(std::vector<point*> points, bool success, double loops, double& successCount);
+
+//globals
+std::unordered_map<Key, square> squareCache;
+
 
 bool square::isSquare() {
 	triangle tri0 = triangle(std::vector<point*>{points[0], points[1], points[2]});
@@ -33,16 +42,46 @@ void square::printSquare() {
 	cout << points[3]->getx() << " " << points[3]->gety() << "\n";
 }
 
+void testSquare(std::vector<point*> points, bool success, double loops, double& successCount) {
+	cout << "test square started\n";
+	Key key = {
+		points[0]->pointString(),
+		points[1]->pointString(),
+		points[2]->pointString(),
+		points[3]->pointString(),
+	};
+	for (int i = 0; i < loops; i++) {
+		auto fret = squareCache.find(key);
+		if (fret == squareCache.end()) {
+			square sq = square(points);
+
+			if ((sq.getValidSquare() == success)) {
+				successCount++;
+			}
+			squareCache.emplace(key, sq); // create hashing - redefine hash map to try to use a custom string generator that uses the point vector
+		}
+		else {
+			if ((squareCache[key].getValidSquare() == success)) {
+				successCount++;
+			}
+		}
+	}
+	cout << "finished threaed!\n";
+}
+
+
 void main() {
 
 	// TODO improve large scale tester
 
 	// TODO use smart pointers (especially for lines)
 
-	// TODO implement concurrency
+	// TODO create some sort of caching - implement mutex
 
 	double testLimit = 100000;
-	double testSuccess = 0;
+	double successCount1 = 0;
+	double successCount2 = 0;
+	double successCount3 = 0;
 
 	point a1 = point(0, 0);
 	point b1 = point(0, 5);
@@ -68,20 +107,19 @@ void main() {
 
 	auto t1 = steady_clock::now();
 
-	for (int i = 0; i < testLimit; i++) {
-		square sq1 = square(points1);
-		square sq2 = square(points2);
-		square sq3 = square(points3);
+	std::thread thread1(testSquare, points1, success1, testLimit, std::ref(successCount1));
+	//std::thread thread2(testSquare, points2, success2, testLimit, std::ref(successCount2));
+	//std::thread thread3(testSquare, points3, success3, testLimit, std::ref(successCount3));
 
-		if ((sq1.getValidSquare() == success1) && (sq2.getValidSquare() == success2) && (sq3.getValidSquare() == success3)) {
-			testSuccess++;
-		}
-	}
+	thread1.join();
+	//thread2.join();
+	//thread3.join();
 
 	duration<double> dur1 = steady_clock::now() - t1;
+	cout << successCount1 << " " << successCount2 << " " << successCount3 << "\n";
 
-	cout << "Successful test percentage = " << testSuccess/testLimit*100 << " percent\n";
-	cout << "output took " << dur1 << "seconds\n";
+	cout << "Successful test percentage = " << (successCount1 + successCount2 + successCount3)/testLimit/3*100 << " percent\n";
+	cout << "output took " << dur1 << " seconds\n";
 
 	cout << "end of main\n";
 }
