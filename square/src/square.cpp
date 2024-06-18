@@ -76,14 +76,11 @@ void testSquare(std::vector<point*> points, bool success, double loops, double& 
 
 void main() {
 
-	// TODO improve large scale tester
-
 	// TODO use smart pointers (especially for lines)
 
-	double testLimit = 1000000;
-	double successCount1 = 0;
-	double successCount2 = 0;
-	double successCount3 = 0;
+	double testLimit = 100000;
+	std::vector<double> successCount = {0, 0, 0, 0};
+	double totalSuccess = 0;
 
 	point a1 = point(0, 0);
 	point b1 = point(0, 5);
@@ -103,24 +100,40 @@ void main() {
 	point d3 = point(5, 5);
 	bool success3 = false;
 
+	point a4 = point(2, 1);
+	point b4 = point(-1, 2);
+	point c4 = point(1, -2);
+	point d4 = point(-2, -1);
+	bool success4 = true;
+
 	std::vector<point*> points1 = { &a1, &b1, &c1, &d1 };
 	std::vector<point*> points2 = { &a2, &b2, &c2, &d2 };
 	std::vector<point*> points3 = { &a3, &b3, &c3, &d3 };
+	std::vector<point*> points4 = { &a4, &b4, &c4, &d4 };
 
 	auto t1 = steady_clock::now();
 
-	std::thread thread1(testSquare, points1, success1, testLimit, std::ref(successCount1));
-	std::thread thread2(testSquare, points2, success2, testLimit, std::ref(successCount2));
-	std::thread thread3(testSquare, points3, success3, testLimit, std::ref(successCount3));
+	//std::thread thread1(testSquare, points1, success1, testLimit, std::ref(successCount1));
+	//std::thread thread2(testSquare, points2, success2, testLimit, std::ref(successCount2));
+	//std::thread thread3(testSquare, points3, success3, testLimit, std::ref(successCount3));
+	//std::thread thread4(testSquare, points4, success4, testLimit, std::ref(successCount4));
 
+	std::thread thread1(testSquare, points1, success1, testLimit, std::ref(successCount[0]));
+	std::thread thread2(testSquare, points2, success2, testLimit, std::ref(successCount[1]));
+	std::thread thread3(testSquare, points3, success3, testLimit, std::ref(successCount[2]));
+	std::thread thread4(testSquare, points4, success4, testLimit, std::ref(successCount[3]));
 	thread1.join();
 	thread2.join();
 	thread3.join();
+	thread4.join();
 
 	duration<double> dur1 = steady_clock::now() - t1;
-	cout << successCount1 << " " << successCount2 << " " << successCount3 << "\n";
+	for (auto success : successCount) {
+		cout << success << "\n";
+		totalSuccess += success;
+	}
 
-	cout << "Successful test percentage = " << (successCount1 + successCount2 + successCount3)/testLimit/3*100 << " percent\n";
+	cout << "Successful test percentage = " << (totalSuccess)/testLimit/successCount.size()*100 << " percent\n";
 	cout << "output took " << dur1 << " seconds\n";
 
 	cout << "end of main\n";
